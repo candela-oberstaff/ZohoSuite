@@ -1,4 +1,4 @@
-import type { ApiResponse, Contact, Opportunity, PaginatedResponse, PaginationParams, Module, TeamPipeline, CandidatesApiResponse } from '../types';
+import type { ApiResponse, Contact, Opportunity, PaginatedResponse, PaginationParams, Module, TeamPipeline, CandidatesApiResponse, CandidateDetail } from '../types';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -542,5 +542,9 @@ export const api = {
 
   // Función para obtener candidatos de Intelliscreen
   getIntelliscreenCandidates: (page: number = 1, options?: { useCache?: boolean }) => 
-    fetchWithErrorHandling<CandidatesApiResponse>(`${API_BASE_URL}/intelliscreen/candidates`, { page: page.toString() }, options)
+    fetchWithErrorHandling<CandidatesApiResponse>(`${API_BASE_URL}/intelliscreen/candidates`, { page: page.toString() }, options),
+
+  // Función para obtener el detalle de un candidato de Intelliscreen
+  getIntelliscreenCandidateDetail: (candidateId: string, options?: { useCache?: boolean }) => 
+    fetchWithErrorHandling<CandidateDetail>(`${API_BASE_URL}/recruitment/candidates/${candidateId}/detail`, undefined, options)
 };

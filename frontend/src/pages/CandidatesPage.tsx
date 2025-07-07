@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Users, Mail, Phone, Calendar, ChevronLeft, ChevronRight, Plus, Search, User, Award, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import { IntelliscreenCandidate, CandidatesApiResponse } from '@/types'
 import { api } from '@/services/api'
 
 const CandidatesPage = () => {
+  const navigate = useNavigate()
   const [candidatesData, setCandidatesData] = useState<CandidatesApiResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
@@ -276,6 +277,7 @@ const CandidatesPage = () => {
                       variant="outline" 
                       size="sm" 
                       className="flex-1 group-hover:border-green-300 group-hover:text-green-600 transition-colors"
+                      onClick={() => navigate(`/candidates/${candidate.id}`)}
                     >
                       Ver Detalles
                     </Button>

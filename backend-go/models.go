@@ -597,6 +597,73 @@ type IntelliscreenResponse struct {
 type CandidateListResponse struct {
 	Candidates []Candidate `json:"candidates"`
 	Total      int         `json:"total"`
+}
+
+// ===== ESTRUCTURAS PARA DETALLE DE CANDIDATO =====
+
+// CandidateDetailTest estructura para tests en el detalle de candidato
+type CandidateDetailTest struct {
+	TestID   string  `json:"test_id"`
+	TestName string  `json:"test_name"`
+	Score    float64 `json:"score"`
+}
+
+// CandidateDetailAssessment estructura para assessments en el detalle de candidato
+type CandidateDetailAssessment struct {
+	ID          string                 `json:"id"`
+	Name        string                 `json:"name"`
+	JobTitle    string                 `json:"job_title"`
+	Status      string                 `json:"status"`
+	CreatedAt   string                 `json:"created_at"`
+	CompletedAt *string                `json:"completed_at,omitempty"`
+	AIScore     *string                `json:"ai_score,omitempty"`
+	AvgScore    *float64               `json:"avg_score,omitempty"`
+	Tests       []CandidateDetailTest  `json:"tests"`
+}
+
+// CandidateResumeProperties estructura para propiedades del resume
+type CandidateResumeProperties struct {
+	Language        *string `json:"language,omitempty"`
+	LocationCountry *string `json:"location_country,omitempty"`
+	LatestJobTitle  *string `json:"latest_job_title,omitempty"`
+}
+
+// CandidateSkillDetail estructura para habilidades en el detalle
+type CandidateSkillDetail struct {
+	Skill           string `json:"skill"`
+	YearsExperience string `json:"years_experience"`
+}
+
+// CandidateWorkHistoryDetail estructura para historial laboral en el detalle
+type CandidateWorkHistoryDetail struct {
+	Company   string  `json:"company"`
+	Title     string  `json:"title"`
+	StartDate string  `json:"start_date"`
+	EndDate   *string `json:"end_date,omitempty"`
+}
+
+// CandidateEducationDetail estructura para educación en el detalle
+type CandidateEducationDetail struct {
+	EducationLevel       *string `json:"education_level,omitempty"`
+	UndergraduateDegree  *string `json:"undergraduate_degree,omitempty"`
+	UndergraduateSchool  *string `json:"undergraduate_school,omitempty"`
+	UndergraduateGPA     *string `json:"undergraduate_gpa,omitempty"`
+	GraduateDegree       *string `json:"graduate_degree,omitempty"`
+	GraduateSchool       *string `json:"graduate_school,omitempty"`
+	GraduateGPA          *string `json:"graduate_gpa,omitempty"`
+}
+
+// CandidateDetail estructura para el detalle completo de un candidato
+type CandidateDetail struct {
+	ID               string                         `json:"id"`
+	Name             string                         `json:"name"`
+	Email            string                         `json:"email"`
+	Phone            *string                        `json:"phone,omitempty"`
+	Assessments      []CandidateDetailAssessment    `json:"assessments"`
+	ResumeProperties *CandidateResumeProperties     `json:"resume_properties,omitempty"`
+	Skills           []CandidateSkillDetail         `json:"skills,omitempty"`
+	WorkHistory      []CandidateWorkHistoryDetail   `json:"work_history,omitempty"`
+	Education        *CandidateEducationDetail      `json:"education,omitempty"`
 	Page       int         `json:"page,omitempty"`
 	Limit      int         `json:"limit,omitempty"`
 }

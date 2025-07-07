@@ -22,6 +22,7 @@ import Subscriptions from '@/pages/Subscriptions'
 import SubscriptionDetail from '@/pages/SubscriptionDetail'
 import CandidatesPage from '@/pages/CandidatesPage'
 import CreateCandidate from '@/pages/CreateCandidate'
+import CandidateDetail from '@/pages/CandidateDetail'
 import { useState, useEffect } from 'react'
 import './App.css'
 import { api } from './services/api'
@@ -116,6 +117,7 @@ const App = () => {
         {/* Candidates Routes */}
         <Route path="/candidates" element={<CandidatesPage />} />
         <Route path="/candidates/create" element={<CreateCandidate />} />
+        <Route path="/candidates/:id" element={<CandidateDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -304,6 +304,65 @@ export interface CandidatesApiResponse {
   page_size: number;
 }
 
+// Interfaces para el detalle de candidato de Intelliscreen
+export interface CandidateDetailTest {
+  test_id: string;
+  test_name: string;
+  score: number;
+}
+
+export interface CandidateDetailAssessment {
+  id: string;
+  name: string;
+  job_title: string;
+  status: string;
+  created_at: string;
+  completed_at?: string;
+  ai_score?: string;
+  avg_score?: number;
+  tests: CandidateDetailTest[];
+}
+
+export interface CandidateResumeProperties {
+  language?: string;
+  location_country?: string;
+  latest_job_title?: string;
+}
+
+export interface CandidateSkill {
+  skill: string;
+  years_experience: string;
+}
+
+export interface CandidateWorkHistory {
+  company: string;
+  title: string;
+  start_date: string;
+  end_date?: string;
+}
+
+export interface CandidateEducation {
+  education_level?: string;
+  undergraduate_degree?: string;
+  undergraduate_school?: string;
+  undergraduate_gpa?: string;
+  graduate_degree?: string;
+  graduate_school?: string;
+  graduate_gpa?: string;
+}
+
+export interface CandidateDetail {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  assessments: CandidateDetailAssessment[];
+  resume_properties?: CandidateResumeProperties;
+  skills?: CandidateSkill[];
+  work_history?: CandidateWorkHistory[];
+  education?: CandidateEducation;
+}
+
 export interface Position {
   id: string;
   title: string;

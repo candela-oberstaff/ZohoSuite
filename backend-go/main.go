@@ -177,6 +177,7 @@ func setupRoutes(router *gin.Engine) {
 			// Rutas para candidatos
 			recruitmentGroup.GET("/candidates", getCandidatesHandler)
 			recruitmentGroup.GET("/candidates/:id", getCandidateHandler)
+			recruitmentGroup.GET("/candidates/:id/detail", getCandidateDetailHandler)
 			recruitmentGroup.POST("/candidates", createCandidateHandler)
 			recruitmentGroup.GET("/candidates/:id/results", getCandidateResultsHandler)
 
