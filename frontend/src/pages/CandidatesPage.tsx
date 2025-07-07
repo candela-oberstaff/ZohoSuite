@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Users, Mail, Phone, Calendar, ChevronLeft, ChevronRight, Plus, Search } from 'lucide-react'
+import { Users, Mail, Phone, Calendar, ChevronLeft, ChevronRight, Plus, Search, User, Award, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -36,11 +36,21 @@ const CandidatesPage = () => {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'completed': return 'bg-green-100 text-green-800'
-      case 'pending': return 'bg-yellow-100 text-yellow-800'
-      case 'in_progress': return 'bg-blue-100 text-blue-800'
-      case 'failed': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'completed': return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      case 'pending': return 'bg-amber-50 text-amber-700 border-amber-200'
+      case 'in_progress': return 'bg-blue-50 text-blue-700 border-blue-200'
+      case 'failed': return 'bg-red-50 text-red-700 border-red-200'
+      default: return 'bg-gray-50 text-gray-700 border-gray-200'
+    }
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'completed': return <CheckCircle className="h-3 w-3" />
+      case 'pending': return <Clock className="h-3 w-3" />
+      case 'in_progress': return <AlertCircle className="h-3 w-3" />
+      case 'failed': return <XCircle className="h-3 w-3" />
+      default: return <Clock className="h-3 w-3" />
     }
   }
 
@@ -166,178 +176,223 @@ const CandidatesPage = () => {
         </Card>
       </div>
 
-      {/* Candidates List */}
-      <div className="grid grid-cols-1 gap-4">
+      {/* Candidates Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredCandidates.length > 0 ? (
           filteredCandidates.map((candidate) => (
-            <Card key={candidate.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                  {/* Candidate Info */}
-                  <div className="flex-1">
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                          <Users className="h-6 w-6 text-blue-600" />
-                        </div>
+            <Card key={candidate.id} className="group hover:shadow-xl transition-all duration-300 border-0 shadow-md hover:scale-[1.02] bg-gradient-to-br from-white to-gray-50">
+              <CardContent className="p-0">
+                {/* Header with gradient */}
+                <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 text-white relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30">
+                        <User className="h-8 w-8 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-semibold text-gray-900 truncate">
+                        <h3 className="text-xl font-bold truncate">
                           {candidate.name || 'Sin nombre'}
                         </h3>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
-                          <div className="flex items-center text-gray-600">
-                            <Mail className="h-4 w-4 mr-1" />
-                            <span className="text-sm truncate">{candidate.email || 'Sin email'}</span>
-                          </div>
-                          {candidate.phone && (
-                            <div className="flex items-center text-gray-600">
-                              <Phone className="h-4 w-4 mr-1" />
-                              <span className="text-sm">{candidate.phone}</span>
-                            </div>
-                          )}
+                        <div className="flex items-center gap-2 mt-1">
+                          <Mail className="h-4 w-4" />
+                          <span className="text-sm text-white/90 truncate">
+                            {candidate.email || 'Sin email'}
+                          </span>
                         </div>
+                        {candidate.phone && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <Phone className="h-4 w-4" />
+                            <span className="text-sm text-white/90">
+                              {candidate.phone}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* Assessments */}
-                  <div className="lg:flex-shrink-0">
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-gray-700">
-                        Evaluaciones ({candidate.assessments?.length || 0})
+                {/* Content */}
+                <div className="p-6">
+                  {/* Assessments Section */}
+                  <div className="mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <Award className="h-5 w-5 text-green-600" />
+                        Assessments
                       </h4>
-                      {candidate.assessments && candidate.assessments.length > 0 ? (
-                        <div className="space-y-1">
-                          {candidate.assessments.slice(0, 2).map((assessment) => (
-                            <div key={assessment.id} className="flex items-center justify-between gap-2">
+                      <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                        {candidate.assessments?.length || 0}
+                      </Badge>
+                    </div>
+                    
+                    {candidate.assessments && candidate.assessments.length > 0 ? (
+                      <div className="space-y-3">
+                        {candidate.assessments.slice(0, 2).map((assessment) => (
+                          <div key={assessment.id} className="bg-green-50 rounded-lg p-4 border border-green-100">
+                            <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 truncate">
+                                <p className="font-medium text-gray-900 truncate text-sm">
                                   {assessment.name}
                                 </p>
-                                <p className="text-xs text-gray-600 truncate">
+                                <p className="text-xs text-gray-600 truncate mt-1">
                                   {assessment.job_title}
                                 </p>
-                                <p className="text-xs text-gray-500">
-                                  {formatDate(assessment.created_at)}
-                                </p>
+                                <div className="flex items-center gap-1 mt-2">
+                                  <Calendar className="h-3 w-3 text-gray-400" />
+                                  <span className="text-xs text-gray-500">
+                                    {formatDate(assessment.created_at)}
+                                  </span>
+                                </div>
                               </div>
-                              <Badge className={getStatusColor(assessment.status)}>
+                              <Badge className={`${getStatusColor(assessment.status)} border flex items-center gap-1 text-xs px-2 py-1`}>
+                                {getStatusIcon(assessment.status)}
                                 {getStatusText(assessment.status)}
                               </Badge>
                             </div>
-                          ))}
-                          {candidate.assessments.length > 2 && (
-                            <p className="text-xs text-gray-500">
-                              +{candidate.assessments.length - 2} más
-                            </p>
-                          )}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-gray-500">Sin evaluaciones</p>
-                      )}
-                    </div>
+                          </div>
+                        ))}
+                        {candidate.assessments.length > 2 && (
+                          <div className="text-center">
+                            <Badge variant="outline" className="text-xs">
+                              +{candidate.assessments.length - 2} assessments más
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Award className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                        <p className="text-sm text-gray-500">Sin assessments</p>
+                        <p className="text-xs text-gray-400 mt-1">Aún no hay assessments registrados</p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Actions */}
-                  <div className="lg:flex-shrink-0">
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        Ver Detalles
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Nueva Evaluación
-                      </Button>
-                    </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex-1 group-hover:border-green-300 group-hover:text-green-600 transition-colors"
+                    >
+                      Ver Detalles
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border-0"
+                    >
+                      Nuevo Assessment
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))
         ) : (
-          <Card>
-            <CardContent className="p-8 text-center">
-              <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {searchTerm ? 'No se encontraron candidatos' : 'No hay candidatos'}
-              </h3>
-              <p className="text-gray-600 mb-4">
-                {searchTerm 
-                  ? `No hay candidatos que coincidan con "${searchTerm}"`
-                  : 'Aún no hay candidatos registrados en el sistema'
-                }
-              </p>
-              {!searchTerm && (
-                <Link to="/candidates/create">
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Agregar Primer Candidato
-                  </Button>
-                </Link>
-              )}
-            </CardContent>
-          </Card>
+          <div className="col-span-full">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-gray-50 to-white">
+              <CardContent className="p-12 text-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                   <Users className="h-12 w-12 text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  {searchTerm ? 'No se encontraron candidatos' : 'No hay candidatos'}
+                </h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                  {searchTerm 
+                    ? `No hay candidatos que coincidan con "${searchTerm}". Intenta con otros términos de búsqueda.`
+                    : 'Aún no hay candidatos registrados en el sistema. Comienza agregando tu primer candidato.'
+                  }
+                </p>
+                {!searchTerm && (
+                   <Link to="/candidates/create">
+                     <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 border-0 px-6 py-3">
+                       <Plus className="h-5 w-5 mr-2" />
+                       Agregar Primer Candidato
+                     </Button>
+                   </Link>
+                 )}
+              </CardContent>
+            </Card>
+          </div>
         )}
       </div>
 
       {/* Pagination */}
       {candidatesData.num_pages > 1 && (
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-700">
-            Mostrando página {candidatesData.page} de {candidatesData.num_pages}
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Anterior
-            </Button>
-            
-            <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(5, candidatesData.num_pages) }, (_, i) => {
-                const pageNum = i + 1
-                return (
-                  <Button
-                    key={pageNum}
-                    variant={currentPage === pageNum ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handlePageChange(pageNum)}
-                    className="w-8 h-8 p-0"
-                  >
-                    {pageNum}
-                  </Button>
-                )
-              })}
-              {candidatesData.num_pages > 5 && (
-                <>
-                  <span className="text-gray-500">...</span>
-                  <Button
-                    variant={currentPage === candidatesData.num_pages ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handlePageChange(candidatesData.num_pages)}
-                    className="w-8 h-8 p-0"
-                  >
-                    {candidatesData.num_pages}
-                  </Button>
-                </>
-              )}
+        <Card className="border-0 shadow-md bg-gradient-to-r from-white to-gray-50">
+          <CardContent className="p-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-sm text-gray-700 font-medium">
+                Mostrando página <span className="font-bold text-green-600">{candidatesData.page}</span> de <span className="font-bold text-green-600">{candidatesData.num_pages}</span>
+                <span className="text-gray-500 ml-2">({candidatesData.total} candidatos total)</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="hover:bg-green-50 hover:border-green-300 hover:text-green-600 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Anterior
+                </Button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, candidatesData.num_pages) }, (_, i) => {
+                    const pageNum = i + 1
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handlePageChange(pageNum)}
+                        className={`w-10 h-10 p-0 transition-all ${
+                          currentPage === pageNum 
+                            ? 'bg-gradient-to-r from-green-600 to-emerald-600 border-0 text-white shadow-md' 
+                            : 'hover:bg-green-50 hover:border-green-300 hover:text-green-600'
+                        }`}
+                      >
+                        {pageNum}
+                      </Button>
+                    )
+                  })}
+                  {candidatesData.num_pages > 5 && (
+                    <>
+                      <span className="text-gray-400 px-2">...</span>
+                      <Button
+                        variant={currentPage === candidatesData.num_pages ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handlePageChange(candidatesData.num_pages)}
+                        className={`w-10 h-10 p-0 transition-all ${
+                          currentPage === candidatesData.num_pages 
+                            ? 'bg-gradient-to-r from-green-600 to-emerald-600 border-0 text-white shadow-md' 
+                            : 'hover:bg-green-50 hover:border-green-300 hover:text-green-600'
+                        }`}
+                      >
+                        {candidatesData.num_pages}
+                      </Button>
+                    </>
+                  )}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === candidatesData.num_pages}
+                  className="hover:bg-green-50 hover:border-green-300 hover:text-green-600 transition-colors"
+                >
+                  Siguiente
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
             </div>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === candidatesData.num_pages}
-            >
-              Siguiente
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )

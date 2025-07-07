@@ -43,6 +43,8 @@ func NewIntelliscreenClient() *IntelliscreenClient {
 // makeRequest realiza una petición HTTP a la API de Intelliscreen
 func (c *IntelliscreenClient) makeRequest(method, endpoint string, body interface{}) (*http.Response, error) {
 	url := c.BaseURL + endpoint
+	fmt.Printf("[DEBUG] Haciendo petición %s a: %s\n", method, url)
+	fmt.Printf("[DEBUG] API Key: %s\n", c.APIKey)
 
 	var reqBody io.Reader
 	if body != nil {
@@ -51,6 +53,7 @@ func (c *IntelliscreenClient) makeRequest(method, endpoint string, body interfac
 			return nil, fmt.Errorf("error marshaling request body: %v", err)
 		}
 		reqBody = bytes.NewBuffer(jsonBody)
+		fmt.Printf("[DEBUG] Request body: %s\n", string(jsonBody))
 	}
 
 	req, err := http.NewRequest(method, url, reqBody)
@@ -62,8 +65,16 @@ func (c *IntelliscreenClient) makeRequest(method, endpoint string, body interfac
 	req.Header.Set("X-API-Key", c.APIKey)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
+	fmt.Println("[DEBUG] Headers configurados")
 
-	return c.HTTPClient.Do(req)
+	fmt.Println("[DEBUG] Ejecutando petición HTTP...")
+	resp, err := c.HTTPClient.Do(req)
+	if err != nil {
+		fmt.Printf("[ERROR] Error en petición HTTP: %v\n", err)
+		return nil, err
+	}
+	fmt.Printf("[DEBUG] Respuesta HTTP recibida. Status: %d\n", resp.StatusCode)
+	return resp, nil
 }
 
 // ===== FUNCIONES PARA CANDIDATOS =====
@@ -100,7 +111,7 @@ func (c *IntelliscreenClient) GetCandidates() ([]Candidate, error) {
 
 // GetCandidatesWithPagination obtiene la lista de candidatos con paginación
 func (c *IntelliscreenClient) GetCandidatesWithPagination(page int) (*CandidatesResponse, error) {
-	endpoint := fmt.Sprintf("/candidates/?page=%d", page)
+	endpoint := fmt.Sprintf("/candidates/?page=%d&page_size=200", page)
 	resp, err := c.makeRequest("GET", endpoint, nil)
 	if err != nil {
 		return nil, err
@@ -112,9 +123,27 @@ func (c *IntelliscreenClient) GetCandidatesWithPagination(page int) (*Candidates
 		return nil, fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(body))
 	}
 
+	// Leer el cuerpo de la respuesta para debugging
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("error reading response body: %v", err)
+	}
+	if len(body) > 500 {
+		fmt.Printf("[DEBUG] Respuesta de la API (primeros 500 caracteres): %s\n", string(body)[:500])
+	} else {
+		fmt.Printf("[DEBUG] Respuesta de la API completa: %s\n", string(body))
+	}
+
 	var response CandidatesResponse
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+	if err := json.Unmarshal(body, &response); err != nil {
 		return nil, fmt.Errorf("error decoding response: %v", err)
+	}
+
+	// Agregar campo Name si no existe
+	for i := range response.Candidates {
+		if response.Candidates[i].Name == "" {
+			response.Candidates[i].Name = fmt.Sprintf("%s %s", response.Candidates[i].FirstName, response.Candidates[i].LastName)
+		}
 	}
 
 	return &response, nil
@@ -276,6 +305,8 @@ func getCandidatesHandler(c *gin.Context) {
 
 // getIntelliscreenCandidatesHandler maneja la obtención de candidatos de Intelliscreen con paginación
 func getIntelliscreenCandidatesHandler(c *gin.Context) {
+	fmt.Println("[DEBUG] Iniciando getIntelliscreenCandidatesHandler")
+	
 	// Obtener el parámetro de página, por defecto 1
 	page := 1
 	if pageParam := c.Query("page"); pageParam != "" {
@@ -283,22 +314,38 @@ func getIntelliscreenCandidatesHandler(c *gin.Context) {
 			page = p
 		}
 	}
+	fmt.Printf("[DEBUG] Página solicitada: %d\n", page)
+
+	// Verificar que el cliente esté inicializado
+	if intelliscreenClient == nil {
+		fmt.Println("[ERROR] intelliscreenClient es nil")
+		c.JSON(http.StatusInternalServerError, ApiResponse{
+			Success: false,
+			Message: "Cliente de Intelliscreen no inicializado",
+		})
+		return
+	}
+	fmt.Println("[DEBUG] Cliente de Intelliscreen inicializado correctamente")
 
 	// Obtener candidatos con paginación
+	fmt.Println("[DEBUG] Llamando a GetCandidatesWithPagination...")
 	response, err := intelliscreenClient.GetCandidatesWithPagination(page)
 	if err != nil {
+		fmt.Printf("[ERROR] Error en GetCandidatesWithPagination: %v\n", err)
 		c.JSON(http.StatusInternalServerError, ApiResponse{
 			Success: false,
 			Message: fmt.Sprintf("Error obteniendo candidatos de Intelliscreen: %v", err),
 		})
 		return
 	}
+	fmt.Printf("[DEBUG] Respuesta obtenida exitosamente. Total candidatos: %d\n", len(response.Candidates))
 
 	c.JSON(http.StatusOK, ApiResponse{
 		Success: true,
 		Data:    response,
 		Message: "Candidatos de Intelliscreen obtenidos exitosamente",
 	})
+	fmt.Println("[DEBUG] Respuesta enviada exitosamente")
 }
 
 // getCandidateHandler maneja la obtención de un candidato específico
@@ -386,8 +433,8 @@ func createPositionHandler(c *gin.Context) {
 		Assessments:       request.Assessments,
 		CustomFields:      request.CustomFields,
 		Status:            "active",
-		CreatedAt:         time.Now(),
-		UpdatedAt:         time.Now(),
+		CreatedAt:         IntelliscreenNow(),
+		UpdatedAt:         IntelliscreenNow(),
 	}
 
 	createdPosition, err := intelliscreenClient.CreatePosition(position)
@@ -606,7 +653,7 @@ func calculatePerformanceMetrics(candidates []Candidate, positions []Position, a
 		completedPositions := 0
 		for _, position := range positions {
 			if position.Status == "closed" || position.Status == "filled" {
-				days := int(time.Since(position.CreatedAt).Hours() / 24)
+				days := int(time.Since(position.CreatedAt.Time).Hours() / 24)
 				totalDays += days
 				completedPositions++
 			}

@@ -1,6 +1,67 @@
 package main
 
-import "time"
+import (
+	"encoding/json"
+	"strings"
+	"time"
+)
+
+// IntelliscreenTime tipo personalizado para manejar el formato de fecha de Intelliscreen
+type IntelliscreenTime struct {
+	time.Time
+}
+
+// UnmarshalJSON implementa json.Unmarshaler para IntelliscreenTime
+func (it *IntelliscreenTime) UnmarshalJSON(data []byte) error {
+	str := strings.Trim(string(data), `"`)
+	if str == "null" || str == "" {
+		return nil
+	}
+	
+	// Formato de Intelliscreen: "2025-06-13T21:30:39.304067"
+	// Agregar zona horaria UTC si no está presente
+	if !strings.Contains(str, "Z") && !strings.Contains(str, "+") && !strings.Contains(str, "-") {
+		str += "Z"
+	}
+	
+	// Intentar varios formatos
+	formats := []string{
+		"2006-01-02T15:04:05.000000Z",
+		"2006-01-02T15:04:05Z",
+		time.RFC3339,
+		time.RFC3339Nano,
+	}
+	
+	for _, format := range formats {
+		if t, err := time.Parse(format, str); err == nil {
+			it.Time = t
+			return nil
+		}
+	}
+	
+	// Si ningún formato funciona, intentar parsearlo como está
+	if t, err := time.Parse("2006-01-02T15:04:05.000000", strings.TrimSuffix(str, "Z")); err == nil {
+		it.Time = t.UTC()
+		return nil
+	}
+	
+	return nil // Ignorar errores de parsing para evitar fallos
+}
+
+// MarshalJSON implementa json.Marshaler para IntelliscreenTime
+func (it IntelliscreenTime) MarshalJSON() ([]byte, error) {
+	return json.Marshal(it.Time.Format(time.RFC3339))
+}
+
+// NewIntelliscreenTime crea un nuevo IntelliscreenTime desde time.Time
+func NewIntelliscreenTime(t time.Time) IntelliscreenTime {
+	return IntelliscreenTime{Time: t}
+}
+
+// Now devuelve el tiempo actual como IntelliscreenTime
+func IntelliscreenNow() IntelliscreenTime {
+	return IntelliscreenTime{Time: time.Now()}
+}
 
 // ApiResponse estructura genérica para respuestas de la API
 type ApiResponse struct {
@@ -338,17 +399,19 @@ type CustomerDetailResponse struct {
 // Candidate estructura para candidatos de Intelliscreen
 type Candidate struct {
 	ID           string                 `json:"id"`
+	Name         string                 `json:"name"`
 	Email        string                 `json:"email"`
 	FirstName    string                 `json:"first_name"`
 	LastName     string                 `json:"last_name"`
 	Phone        string                 `json:"phone,omitempty"`
 	Status       string                 `json:"status"`
-	CreatedAt    time.Time              `json:"created_at"`
-	UpdatedAt    time.Time              `json:"updated_at"`
+	CreatedAt    IntelliscreenTime      `json:"created_at"`
+	UpdatedAt    IntelliscreenTime      `json:"updated_at"`
 	PersonalInfo map[string]interface{} `json:"personal_info,omitempty"`
 	Education    []Education            `json:"education,omitempty"`
 	WorkHistory  []WorkHistory          `json:"work_history,omitempty"`
 	Skills       []Skill                `json:"skills,omitempty"`
+	Assessments  []IntelliscreenAssessment `json:"assessments,omitempty"`
 	// Campos de integración con Zoho
 	ZohoContactID string `json:"zoho_contact_id,omitempty"`
 	ZohoCompanyID string `json:"zoho_company_id,omitempty"`
@@ -386,8 +449,8 @@ type Position struct {
 	Description     string                 `json:"description"`
 	Requirements    string                 `json:"requirements,omitempty"`
 	Status          string                 `json:"status"`
-	CreatedAt       time.Time              `json:"created_at"`
-	UpdatedAt       time.Time              `json:"updated_at"`
+	CreatedAt       IntelliscreenTime      `json:"created_at"`
+	UpdatedAt       IntelliscreenTime      `json:"updated_at"`
 	Candidates      []PositionCandidate    `json:"candidates,omitempty"`
 	Assessments     []string               `json:"assessments,omitempty"`
 	// Campos de integración con Zoho
@@ -398,10 +461,10 @@ type Position struct {
 
 // PositionCandidate estructura para candidatos en una posición específica
 type PositionCandidate struct {
-	CandidateID string    `json:"candidate_id"`
-	Status      string    `json:"status"`
-	AppliedAt   time.Time `json:"applied_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	CandidateID string            `json:"candidate_id"`
+	Status      string            `json:"status"`
+	AppliedAt   IntelliscreenTime `json:"applied_at"`
+	UpdatedAt   IntelliscreenTime `json:"updated_at"`
 	AIScore     float64   `json:"ai_score,omitempty"`
 	Notes       string    `json:"notes,omitempty"`
 }
@@ -414,8 +477,8 @@ type Assessment struct {
 	Type        string                 `json:"type"`
 	Status      string                 `json:"status"`
 	Tests       []Test                 `json:"tests,omitempty"`
-	CreatedAt   time.Time              `json:"created_at"`
-	UpdatedAt   time.Time              `json:"updated_at"`
+	CreatedAt   IntelliscreenTime      `json:"created_at"`
+	UpdatedAt   IntelliscreenTime      `json:"updated_at"`
 	Settings    map[string]interface{} `json:"settings,omitempty"`
 }
 
@@ -448,7 +511,7 @@ type CandidateResult struct {
 	AIScore     float64                `json:"ai_score,omitempty"`
 	TestResults []TestResult           `json:"test_results,omitempty"`
 	Videos      []VideoResult          `json:"videos,omitempty"`
-	CompletedAt time.Time              `json:"completed_at"`
+	CompletedAt IntelliscreenTime      `json:"completed_at"`
 	Metadata    map[string]interface{} `json:"metadata,omitempty"`
 }
 
@@ -471,10 +534,10 @@ type TestAnswer struct {
 
 // VideoResult estructura para resultados de videos
 type VideoResult struct {
-	VideoID     string `json:"video_id"`
-	URL         string `json:"url"`
-	Duration    int    `json:"duration,omitempty"`
-	UploadedAt  time.Time `json:"uploaded_at"`
+	VideoID     string            `json:"video_id"`
+	URL         string            `json:"url"`
+	Duration    int               `json:"duration,omitempty"`
+	UploadedAt  IntelliscreenTime `json:"uploaded_at"`
 	Analysis    map[string]interface{} `json:"analysis,omitempty"`
 }
 
@@ -493,10 +556,10 @@ type RecruitmentDashboard struct {
 
 // RecruitmentActivity estructura para actividad reciente
 type RecruitmentActivity struct {
-	ID          string    `json:"id"`
-	Type        string    `json:"type"`
-	Description string    `json:"description"`
-	Timestamp   time.Time `json:"timestamp"`
+	ID          string            `json:"id"`
+	Type        string            `json:"type"`
+	Description string            `json:"description"`
+	Timestamp   IntelliscreenTime `json:"timestamp"`
 	EntityID    string    `json:"entity_id,omitempty"`
 	EntityType  string    `json:"entity_type,omitempty"`
 }
@@ -512,6 +575,15 @@ type PositionSummary struct {
 }
 
 // ===== ESTRUCTURAS DE RESPUESTA PARA INTELLISCREEN API =====
+
+// IntelliscreenAssessment estructura para assessments de Intelliscreen
+type IntelliscreenAssessment struct {
+	ID       string            `json:"id"`
+	Name     string            `json:"name"`
+	JobTitle string            `json:"job_title"`
+	Status   string            `json:"status"`
+	CreatedAt IntelliscreenTime `json:"created_at"`
+}
 
 // IntelliscreenResponse estructura genérica para respuestas de Intelliscreen
 type IntelliscreenResponse struct {

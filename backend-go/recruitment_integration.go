@@ -63,8 +63,8 @@ func CreatePositionFromOpportunity(opportunityID string) (*Position, error) {
 		ZohoOpportunityID: opportunity.ID,
 		ZohoCompanyID:     opportunity.AccountName, // AccountName es ahora string
 		Status:            "active",
-		CreatedAt:         time.Now(),
-		UpdatedAt:         time.Now(),
+		CreatedAt:         IntelliscreenNow(),
+		UpdatedAt:         IntelliscreenNow(),
 	}
 
 	// Crear la posición en Intelliscreen
