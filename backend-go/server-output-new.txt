@@ -1,0 +1,38 @@
+=== Zoho Bigin Backend - Go ===
+Iniciando servidor...
+Cargando variables de entorno...
+Archivo .env cargado exitosamente
+Configurando Gin...
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+Configurando CORS...
+Configurando rutas...
+[GIN-debug] GET    /                         --> main.setupRoutes.func1 (4 handlers)
+[GIN-debug] GET    /api/contacts             --> main.getContacts (4 handlers)
+[GIN-debug] GET    /api/contacts/:id         --> main.getContactByID (4 handlers)
+[GIN-debug] GET    /api/contactos            --> main.getContacts (4 handlers)
+[GIN-debug] GET    /api/contactos/:id        --> main.getContactByID (4 handlers)
+[GIN-debug] GET    /api/modulos              --> main.getModules (4 handlers)
+[GIN-debug] GET    /api/pipelines            --> main.getPipelines (4 handlers)
+[GIN-debug] GET    /api/team-pipelines       --> main.getTeamPipelines (4 handlers)
+[GIN-debug] GET    /api/pipeline-fields      --> main.getPipelineFields (4 handlers)
+[GIN-debug] GET    /api/oberstaff-pipeline   --> main.getOberstaffPipeline (4 handlers)
+[GIN-debug] GET    /api/test-oberstaff-pipeline --> main.testOberstaffPipeline (4 handlers)
+[GIN-debug] GET    /api/opportunities        --> main.getOpportunities (4 handlers)
+[GIN-debug] POST   /api/opportunities        --> main.createOpportunity (4 handlers)
+🚀 Servidor iniciando en puerto 8001
+📡 URL: http://localhost:8001
+🛑 Presiona Ctrl+C para detener
+Llamando router.Run()...
+Dirección del servidor: :8001
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8001
+[GIN-debug] [ERROR] listen tcp :8001: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+Error al iniciar servidor: listen tcp :8001: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+2025/06/08 13:30:10 Error al iniciar servidor: listen tcp :8001: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+exit status 1

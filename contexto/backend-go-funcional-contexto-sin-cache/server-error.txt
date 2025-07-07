@@ -1,0 +1,6 @@
+main.go:8:2: missing go.sum entry for module providing package github.com/gin-contrib/cors (imported by zoho-bigin-backend); to add:
+	go get zoho-bigin-backend
+handlers.go:12:2: missing go.sum entry for module providing package github.com/gin-gonic/gin (imported by zoho-bigin-backend); to add:
+	go get zoho-bigin-backend
+main.go:10:2: missing go.sum entry for module providing package github.com/joho/godotenv (imported by zoho-bigin-backend); to add:
+	go get zoho-bigin-backend

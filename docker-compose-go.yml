@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Backend Go
+  backend-go:
+    build:
+      context: ./backend-go
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ZOHO_CLIENT_ID=${ZOHO_CLIENT_ID}
+      - ZOHO_CLIENT_SECRET=${ZOHO_CLIENT_SECRET}
+      - ZOHO_REFRESH_TOKEN=${ZOHO_REFRESH_TOKEN}
+      - PORT=8000
+    env_file:
+      - ./backend-go/.env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - zoho-network
+
+  # Frontend React (opcional - si quieres servir desde Docker)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api
+    depends_on:
+      - backend-go
+    restart: unless-stopped
+    networks:
+      - zoho-network
+
+networks:
+  zoho-network:
+    driver: bridge
+
+volumes:
+  # Volumen para logs si es necesario
+  logs:
+    driver: local
