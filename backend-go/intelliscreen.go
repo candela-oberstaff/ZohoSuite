@@ -111,7 +111,8 @@ func (c *IntelliscreenClient) GetCandidates() ([]Candidate, error) {
 
 // GetCandidatesWithPagination obtiene la lista de candidatos con paginación
 func (c *IntelliscreenClient) GetCandidatesWithPagination(page int) (*CandidatesResponse, error) {
-	endpoint := fmt.Sprintf("/candidates/?page=%d&page_size=200", page)
+	// Obtener todos los candidatos de la API externa (que devuelve hasta 500)
+	endpoint := fmt.Sprintf("/candidates/?page=%d&page_size=500", page)
 	resp, err := c.makeRequest("GET", endpoint, nil)
 	if err != nil {
 		return nil, err
@@ -146,7 +147,43 @@ func (c *IntelliscreenClient) GetCandidatesWithPagination(page int) (*Candidates
 		}
 	}
 
-	return &response, nil
+	// Implementar paginación local con 100 candidatos por página
+	const pageSize = 30
+	totalCandidates := len(response.Candidates)
+	startIndex := (page - 1) * pageSize
+	endIndex := startIndex + pageSize
+
+	// Verificar límites
+	if startIndex >= totalCandidates {
+		// Página fuera de rango, devolver respuesta vacía
+		return &CandidatesResponse{
+			Candidates: []Candidate{},
+			Total:      totalCandidates,
+			Page:       page,
+			NumPages:   (totalCandidates + pageSize - 1) / pageSize,
+			PageSize:   pageSize,
+		}, nil
+	}
+
+	if endIndex > totalCandidates {
+		endIndex = totalCandidates
+	}
+
+	// Extraer la porción de candidatos para esta página
+	paginatedCandidates := response.Candidates[startIndex:endIndex]
+
+	// Crear respuesta paginada
+	paginatedResponse := &CandidatesResponse{
+		Candidates: paginatedCandidates,
+		Total:      totalCandidates,
+		Page:       page,
+		NumPages:   (totalCandidates + pageSize - 1) / pageSize,
+		PageSize:   pageSize,
+	}
+
+	fmt.Printf("[DEBUG] Respuesta paginada: página %d, candidatos %d-%d de %d total\n", page, startIndex+1, endIndex, totalCandidates)
+
+	return paginatedResponse, nil
 }
 
 // GetCandidate obtiene un candidato específico por ID
