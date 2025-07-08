@@ -341,7 +341,7 @@ func getCandidatesHandler(c *gin.Context) {
 // getIntelliscreenCandidatesHandler maneja la obtención de candidatos de Intelliscreen con paginación
 func getIntelliscreenCandidatesHandler(c *gin.Context) {
 	fmt.Println("[DEBUG] Iniciando getIntelliscreenCandidatesHandler")
-	
+
 	// Obtener el parámetro de página, por defecto 1
 	page := 1
 	if pageParam := c.Query("page"); pageParam != "" {
@@ -414,12 +414,12 @@ func float64Ptr(f float64) *float64 {
 // createFallbackCandidateDetail crea un detalle básico del candidato cuando la API externa falla
 func createFallbackCandidateDetail(candidateID string) *CandidateDetail {
 	fmt.Printf("[DEBUG] Creando detalle de respaldo para candidato ID: %s\n", candidateID)
-	
+
 	// Intentar obtener información básica del candidato desde la lista de candidatos
 	var candidateName, candidateEmail, candidatePhone string
 	var candidateAssessments []CandidateDetailAssessment
 	found := false
-	
+
 	// Buscar en las primeras 3 páginas de candidatos
 	for page := 1; page <= 3 && !found; page++ {
 		response, err := intelliscreenClient.GetCandidatesWithPagination(page)
@@ -427,13 +427,13 @@ func createFallbackCandidateDetail(candidateID string) *CandidateDetail {
 			fmt.Printf("[DEBUG] Error obteniendo página %d: %v\n", page, err)
 			continue
 		}
-		
+
 		for _, candidate := range response.Candidates {
 			if candidate.ID == candidateID {
 				candidateName = candidate.Name
 				candidateEmail = candidate.Email
 				candidatePhone = candidate.Phone
-				
+
 				// Convertir assessments básicos
 				for _, assessment := range candidate.Assessments {
 					candidateAssessments = append(candidateAssessments, CandidateDetailAssessment{
@@ -451,7 +451,7 @@ func createFallbackCandidateDetail(candidateID string) *CandidateDetail {
 			}
 		}
 	}
-	
+
 	// Si no se encontró, usar valores por defecto
 	if candidateName == "" {
 		candidateName = "Candidato no disponible"
@@ -462,12 +462,12 @@ func createFallbackCandidateDetail(candidateID string) *CandidateDetail {
 	if candidatePhone == "" {
 		candidatePhone = "No disponible"
 	}
-	
+
 	return &CandidateDetail{
-		ID:    candidateID,
-		Name:  candidateName,
-		Email: candidateEmail,
-		Phone: stringPtr(candidatePhone),
+		ID:          candidateID,
+		Name:        candidateName,
+		Email:       candidateEmail,
+		Phone:       stringPtr(candidatePhone),
 		Assessments: candidateAssessments,
 		ResumeProperties: &CandidateResumeProperties{
 			Language:        stringPtr("Información no disponible temporalmente"),
@@ -486,16 +486,16 @@ func createFallbackCandidateDetail(candidateID string) *CandidateDetail {
 func getCandidateDetailHandler(c *gin.Context) {
 	candidateID := c.Param("id")
 	fmt.Printf("[DEBUG] Obteniendo detalle para candidato ID: %s\n", candidateID)
-	
+
 	// Primero intentar obtener el candidato básico
 	candidate, err := intelliscreenClient.GetCandidate(candidateID)
 	if err != nil {
 		fmt.Printf("[ERROR] Error obteniendo candidato básico: %v\n", err)
-		
+
 		// Si falla la obtención del candidato específico, intentar obtener datos básicos de la lista
 		fmt.Printf("[DEBUG] Intentando obtener datos básicos del candidato desde la lista de candidatos\n")
 		candidateDetail := createFallbackCandidateDetail(candidateID)
-		
+
 		c.JSON(http.StatusOK, ApiResponse{
 			Success: true,
 			Data:    candidateDetail,
@@ -503,20 +503,20 @@ func getCandidateDetailHandler(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	// Convertir candidato básico a detalle con estructura completa
 	candidateDetail := &CandidateDetail{
-		ID:    candidate.ID,
-		Name:  candidate.Name,
-		Email: candidate.Email,
-		Phone: &candidate.Phone,
-		Assessments: []CandidateDetailAssessment{},
+		ID:               candidate.ID,
+		Name:             candidate.Name,
+		Email:            candidate.Email,
+		Phone:            &candidate.Phone,
+		Assessments:      []CandidateDetailAssessment{},
 		ResumeProperties: &CandidateResumeProperties{},
-		Skills: []CandidateSkillDetail{},
-		WorkHistory: []CandidateWorkHistoryDetail{},
-		Education: &CandidateEducationDetail{},
+		Skills:           []CandidateSkillDetail{},
+		WorkHistory:      []CandidateWorkHistoryDetail{},
+		Education:        &CandidateEducationDetail{},
 	}
-	
+
 	// Agregar evaluaciones con estructura completa
 	for _, assessment := range candidate.Assessments {
 		candidateDetail.Assessments = append(candidateDetail.Assessments, CandidateDetailAssessment{
@@ -526,10 +526,10 @@ func getCandidateDetailHandler(c *gin.Context) {
 			Status:      assessment.Status,
 			CreatedAt:   assessment.CreatedAt.Format("2006-01-02T15:04:05Z"),
 			CompletedAt: stringPtr(assessment.CreatedAt.Format("2006-01-02T15:04:05Z")),
-			Tests: []CandidateDetailTest{},
+			Tests:       []CandidateDetailTest{},
 		})
 	}
-	
+
 	// Agregar habilidades con años de experiencia
 	for _, skill := range candidate.Skills {
 		candidateDetail.Skills = append(candidateDetail.Skills, CandidateSkillDetail{
@@ -537,9 +537,7 @@ func getCandidateDetailHandler(c *gin.Context) {
 			YearsExperience: "3+",
 		})
 	}
-	
 
-	
 	// Agregar historial laboral
 	for _, work := range candidate.WorkHistory {
 		var endDate *string
@@ -553,9 +551,7 @@ func getCandidateDetailHandler(c *gin.Context) {
 			EndDate:   endDate,
 		})
 	}
-	
 
-	
 	// Agregar educación completa
 	if len(candidate.Education) > 0 {
 		edu := candidate.Education[0]
@@ -566,12 +562,12 @@ func getCandidateDetailHandler(c *gin.Context) {
 			UndergraduateGPA:    stringPtr("3.8"),
 			GraduateDegree:      stringPtr("Master of Science in Computer Science"),
 			GraduateSchool:      stringPtr("Stanford University"),
-			GraduateGPA:        stringPtr("3.9"),
+			GraduateGPA:         stringPtr("3.9"),
 		}
 	}
-	
+
 	fmt.Printf("[DEBUG] Detalle del candidato construido exitosamente\n")
-	
+
 	c.JSON(http.StatusOK, ApiResponse{
 		Success: true,
 		Data:    candidateDetail,
@@ -705,7 +701,7 @@ func getCandidateResultsHandler(c *gin.Context) {
 // getRecruitmentDashboardHandler maneja la obtención del dashboard de reclutamiento
 func getRecruitmentDashboardHandler(c *gin.Context) {
 	fmt.Println("[DEBUG] Iniciando getRecruitmentDashboardHandler")
-	
+
 	// Obtener datos reales de la API de Intelliscreen
 	fmt.Println("[DEBUG] Obteniendo candidatos...")
 	candidates, err := intelliscreenClient.GetCandidates()
@@ -821,13 +817,13 @@ func countCompletedAssessments(assessments []Assessment) int {
 // generateRecentActivityFromCandidates genera actividad reciente basada en candidatos reales
 func generateRecentActivityFromCandidates(candidates []Candidate) []RecruitmentActivity {
 	var activities []RecruitmentActivity
-	
+
 	// Tomar los últimos candidatos como actividad reciente
 	for i, candidate := range candidates {
 		if i >= 10 { // Limitar a 10 actividades recientes
 			break
 		}
-		
+
 		activity := RecruitmentActivity{
 			ID:          fmt.Sprintf("activity_%d", i+1),
 			Type:        "candidate_updated",
@@ -838,14 +834,14 @@ func generateRecentActivityFromCandidates(candidates []Candidate) []RecruitmentA
 		}
 		activities = append(activities, activity)
 	}
-	
+
 	return activities
 }
 
 // calculatePerformanceMetrics calcula métricas de rendimiento basadas en datos reales
 func calculatePerformanceMetrics(candidates []Candidate, positions []Position, assessments []Assessment) map[string]interface{} {
 	metrics := map[string]interface{}{}
-	
+
 	// Calcular tasa de éxito basada en candidatos
 	if len(candidates) > 0 {
 		hiredCount := 0
@@ -858,7 +854,7 @@ func calculatePerformanceMetrics(candidates []Candidate, positions []Position, a
 	} else {
 		metrics["success_rate"] = 0.0
 	}
-	
+
 	// Calcular tiempo promedio de contratación (estimado)
 	if len(positions) > 0 {
 		totalDays := 0
@@ -878,7 +874,7 @@ func calculatePerformanceMetrics(candidates []Candidate, positions []Position, a
 	} else {
 		metrics["average_time_to_hire"] = 0.0
 	}
-	
+
 	// Calcular satisfacción del candidato basada en evaluaciones completadas
 	if len(assessments) > 0 {
 		completedAssessments := countCompletedAssessments(assessments)
@@ -891,7 +887,7 @@ func calculatePerformanceMetrics(candidates []Candidate, positions []Position, a
 	} else {
 		metrics["candidate_satisfaction"] = 0.0
 	}
-	
+
 	return metrics
 }
 
