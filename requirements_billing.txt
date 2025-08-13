@@ -1,0 +1,2 @@
+# Dependencias para el cliente de Zoho Billing
+requests>=2.28.0

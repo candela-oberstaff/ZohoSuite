@@ -148,7 +148,7 @@ func (c *IntelliscreenClient) GetCandidatesWithPagination(page int) (*Candidates
 	}
 
 	// Implementar paginación local con 100 candidatos por página
-	const pageSize = 30
+	const pageSize = 100
 	totalCandidates := len(response.Candidates)
 	startIndex := (page - 1) * pageSize
 	endIndex := startIndex + pageSize

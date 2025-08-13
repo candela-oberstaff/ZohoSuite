@@ -23,6 +23,7 @@ import SubscriptionDetail from '@/pages/SubscriptionDetail'
 import CandidatesPage from '@/pages/CandidatesPage'
 import CreateCandidate from '@/pages/CreateCandidate'
 import CandidateDetail from '@/pages/CandidateDetail'
+import N8nChat from '@/pages/N8nChat'
 import { useState, useEffect } from 'react'
 import './App.css'
 import { api } from './services/api'
@@ -79,7 +80,11 @@ const App = () => {
   )
 
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+      }}
+    >
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<Navigate to="/contacts" replace />} />
@@ -118,6 +123,9 @@ const App = () => {
         <Route path="/candidates" element={<CandidatesPage />} />
         <Route path="/candidates/create" element={<CreateCandidate />} />
         <Route path="/candidates/:id" element={<CandidateDetail />} />
+        
+        {/* N8n Official Chat Route */}
+        <Route path="/n8n-chat" element={<N8nChat />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,0 +1,34 @@
+2025-08-04 10:59:24 - INFO - 🚀 Monitor de Intelliscreen inicializado
+2025-08-04 10:59:24 - INFO - 📡 Webhook URL: https://n8n.obertrack.com/webhook/5ccffaaf-11d0-4c2d-9ebf-4308b0bb5c1f
+2025-08-04 10:59:24 - INFO - ⏱️  Intervalo de verificación: 300 segundos
+2025-08-04 10:59:25 - ERROR - ❌ Error de autenticación: 404
+2025-08-04 11:03:16 - INFO - 🚀 Monitor de Intelliscreen inicializado
+2025-08-04 11:03:16 - INFO - 📡 Webhook URL: https://n8n.obertrack.com/webhook/5ccffaaf-11d0-4c2d-9ebf-4308b0bb5c1f
+2025-08-04 11:03:16 - INFO - ⏱️  Intervalo de verificación: 300 segundos
+2025-08-04 11:03:17 - ERROR - ❌ Error de autenticación: 404
+2025-08-04 11:09:36 - INFO - 🚀 Monitor de Intelliscreen inicializado
+2025-08-04 11:09:36 - INFO - 📡 Webhook URL: https://n8n.obertrack.com/webhook/5ccffaaf-11d0-4c2d-9ebf-4308b0bb5c1f
+2025-08-04 11:09:36 - INFO - ⏱️  Intervalo de verificación: 300 segundos
+2025-08-04 11:09:37 - ERROR - ❌ Error de autenticación: 404
+2025-08-04 11:09:58 - INFO - 🚀 Monitor de Intelliscreen inicializado
+2025-08-04 11:09:58 - INFO - 📡 Webhook URL: https://n8n.obertrack.com/webhook/5ccffaaf-11d0-4c2d-9ebf-4308b0bb5c1f
+2025-08-04 11:09:58 - INFO - ⏱️  Intervalo de verificación: 300 segundos
+2025-08-04 11:09:59 - ERROR - ❌ Error de autenticación: 404
+2025-08-04 11:14:44 - INFO - 🚀 Monitor de Intelliscreen inicializado
+2025-08-04 11:14:44 - INFO - 📡 Webhook URL: https://n8n.obertrack.com/webhook/5ccffaaf-11d0-4c2d-9ebf-4308b0bb5c1f
+2025-08-04 11:14:44 - INFO - ⏱️  Intervalo de verificación: 300 segundos
+2025-08-04 11:14:44 - ERROR - ❌ Error 404: Verifica la URL de la API y que la clave sea válida
+2025-08-04 11:14:44 - ERROR - 📍 URL utilizada: https://api.intelliscreen.io/api/v1/positions
+2025-08-04 11:14:44 - ERROR - 💡 Sugerencia: Verifica que tu API key sea correcta y que tengas acceso a la API
+2025-08-04 11:17:03 - INFO - 🚀 Monitor de Intelliscreen inicializado
+2025-08-04 11:17:03 - INFO - 📡 Webhook URL: https://n8n.obertrack.com/webhook/5ccffaaf-11d0-4c2d-9ebf-4308b0bb5c1f
+2025-08-04 11:17:03 - INFO - ⏱️  Intervalo de verificación: 300 segundos
+2025-08-04 11:17:03 - ERROR - ❌ Error 404: Verifica la URL de la API y que la clave sea válida
+2025-08-04 11:17:03 - ERROR - 📍 URL utilizada: https://api.intelliscreen.io/api/v1/positions
+2025-08-04 11:17:03 - ERROR - 💡 Sugerencia: Verifica que tu API key sea correcta y que tengas acceso a la API
+2025-08-04 11:27:54 - INFO - 🚀 Monitor de Intelliscreen inicializado
+2025-08-04 11:27:54 - INFO - 📡 Webhook URL: https://n8n.obertrack.com/webhook/5ccffaaf-11d0-4c2d-9ebf-4308b0bb5c1f
+2025-08-04 11:27:54 - INFO - ⏱️  Intervalo de verificación: 300 segundos
+2025-08-04 11:27:55 - ERROR - ❌ Error 404: Verifica la URL de la API y que la clave sea válida
+2025-08-04 11:27:55 - ERROR - 📍 URL utilizada: https://api.intelliscreen.io/positions
+2025-08-04 11:27:55 - ERROR - 💡 Sugerencia: Verifica que tu API key sea correcta y que tengas acceso a la API

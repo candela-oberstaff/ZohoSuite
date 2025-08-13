@@ -1,0 +1,58 @@
+{
+  "webhook_configuration": {
+    "description": "Configuración exacta para el nodo Respond to Webhook en n8n",
+    "node_type": "Respond to Webhook",
+    "settings": {
+      "response_mode": "JSON",
+      "response_code": 200,
+      "response_headers": {
+        "Content-Type": "application/json"
+      },
+      "response_body": {
+        "id": "{{ $json.messageId || $uuid() }}",
+        "content": "He recibido tu mensaje: {{ $json.message }}",
+        "response": "Respuesta del agente IA: {{ $json.message }}",
+        "timestamp": "{{ $now }}",
+        "success": true,
+        "sessionId": "{{ $json.sessionId }}",
+        "userId": "{{ $json.userId }}"
+      }
+    }
+  },
+  "input_data_from_frontend": {
+    "message": "Hola, ¿cómo estás?",
+    "userId": "user-12345",
+    "sessionId": "session-67890",
+    "messageId": "msg-1735067890123-abc123",
+    "timestamp": "2024-12-24T20:31:30.123Z"
+  },
+  "expected_response": {
+    "id": "msg-1735067890123-abc123",
+    "content": "He recibido tu mensaje: Hola, ¿cómo estás?",
+    "response": "Respuesta del agente IA: Hola, ¿cómo estás?",
+    "timestamp": "2024-12-24T20:31:30.456Z",
+    "success": true,
+    "sessionId": "session-67890",
+    "userId": "user-12345"
+  },
+  "troubleshooting": {
+    "common_errors": [
+      {
+        "error": "500 Internal Server Error",
+        "cause": "Workflow no está activo",
+        "solution": "Activar el workflow en n8n"
+      },
+      {
+        "error": "500 Internal Server Error",
+        "cause": "Nodo Respond to Webhook mal configurado",
+        "solution": "Verificar que el Response Body tenga formato JSON válido"
+      },
+      {
+        "error": "500 Internal Server Error",
+        "cause": "Error en expresiones de n8n",
+        "solution": "Verificar sintaxis de {{ }} en el Response Body"
+      }
+    ],
+    "test_curl_command": "curl -X POST https://n8n.obertrack.com/webhook/695cf0ce-bbbe-42f2-b8c9-472d7cc82b03 -H 'Content-Type: application/json' -d '{\"message\": \"test\", \"userId\": \"test-user\", \"sessionId\": \"test-session\", \"messageId\": \"test-123\", \"timestamp\": \"2024-12-24T20:31:30.123Z\"}'"
+  }
+}

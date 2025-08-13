@@ -351,6 +351,52 @@ export interface CandidateEducation {
   graduate_gpa?: string;
 }
 
+// Interfaces para el resume completo del candidato
+export interface CandidateResumePersonalInfo {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+}
+
+export interface CandidateResumeWorkHistory {
+  company: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+}
+
+export interface CandidateResumeEducation {
+  education_level: string;
+  undergraduate_degree: string;
+  undergraduate_school: string;
+  undergraduate_gpa: string;
+  graduate_degree: string;
+  graduate_school: string;
+  graduate_gpa: string;
+}
+
+export interface CandidateResumePropertiesComplete {
+  job_title: string;
+  language: string;
+  seniority: string;
+  location: string;
+  work_history: CandidateResumeWorkHistory;
+  education: CandidateResumeEducation;
+}
+
+export interface CandidateResumeSkill {
+  skill: string;
+  years_experience: string;
+}
+
+export interface CandidateResumeResponse {
+  personal_info: CandidateResumePersonalInfo;
+  resume_properties: CandidateResumePropertiesComplete;
+  skills: CandidateResumeSkill[];
+  resume_text: string;
+}
+
 export interface CandidateDetail {
   id: string;
   name: string;
@@ -361,6 +407,8 @@ export interface CandidateDetail {
   skills?: CandidateSkill[];
   work_history?: CandidateWorkHistory[];
   education?: CandidateEducation;
+  // Nuevo campo para el resume completo
+  resume_data?: CandidateResumeResponse;
 }
 
 export interface Position {

@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge'
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-import { Users, TrendingUp, BarChart3, Home, Calendar, Mail, FileText, Settings, Building, CreditCard, Factory, Building2, UserCheck } from 'lucide-react'
+import { Users, TrendingUp, BarChart3, Home, Calendar, Mail, FileText, Settings, Building, CreditCard, Factory, Building2, UserCheck, Bot } from 'lucide-react'
 
 interface ZohoSidebarProps {
   collapsed: boolean
@@ -25,6 +25,7 @@ const ZohoSidebar: React.FC<ZohoSidebarProps> = ({ collapsed }) => {
     { path: '/candidates', name: 'Candidatos', icon: UserCheck },
     { path: '/customers', name: 'Clientes Billing', icon: Building },
     { path: '/subscriptions', name: 'Suscripciones', icon: CreditCard },
+    { path: '/n8n-chat', name: 'Chat n8n', icon: Bot },
     { path: '/reports', name: 'Reportes', icon: BarChart3 },
     { path: '/calendar', name: 'Calendario', icon: Calendar },
     { path: '/emails', name: 'Emails', icon: Mail },

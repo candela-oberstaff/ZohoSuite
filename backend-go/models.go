@@ -664,6 +664,8 @@ type CandidateDetail struct {
 	Skills           []CandidateSkillDetail         `json:"skills,omitempty"`
 	WorkHistory      []CandidateWorkHistoryDetail   `json:"work_history,omitempty"`
 	Education        *CandidateEducationDetail      `json:"education,omitempty"`
+	// Nuevos campos del resume
+	ResumeData       *CandidateResumeResponse       `json:"resume_data,omitempty"`
 	Page       int         `json:"page,omitempty"`
 	Limit      int         `json:"limit,omitempty"`
 }
@@ -685,4 +687,57 @@ type CandidateInviteRequest struct {
 	FirstName string `json:"first_name,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
 	Message   string `json:"message,omitempty"`
+}
+
+// ===== ESTRUCTURAS PARA RESUME DE CANDIDATO =====
+
+// CandidateResumePersonalInfo estructura para información personal del resume
+type CandidateResumePersonalInfo struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Phone string `json:"phone"`
+	Email string `json:"email"`
+}
+
+// CandidateResumeWorkHistory estructura para historial laboral del resume
+type CandidateResumeWorkHistory struct {
+	Company   string `json:"company"`
+	Title     string `json:"title"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
+}
+
+// CandidateResumeEducation estructura para educación del resume
+type CandidateResumeEducation struct {
+	EducationLevel       string `json:"education_level"`
+	UndergraduateDegree  string `json:"undergraduate_degree"`
+	UndergraduateSchool  string `json:"undergraduate_school"`
+	UndergraduateGPA     string `json:"undergraduate_gpa"`
+	GraduateDegree       string `json:"graduate_degree"`
+	GraduateSchool       string `json:"graduate_school"`
+	GraduateGPA          string `json:"graduate_gpa"`
+}
+
+// CandidateResumeProperties estructura para propiedades del resume completo
+type CandidateResumePropertiesComplete struct {
+	JobTitle    string                       `json:"job_title"`
+	Language    string                       `json:"language"`
+	Seniority   string                       `json:"seniority"`
+	Location    string                       `json:"location"`
+	WorkHistory CandidateResumeWorkHistory   `json:"work_history"`
+	Education   CandidateResumeEducation     `json:"education"`
+}
+
+// CandidateResumeSkill estructura para habilidades del resume
+type CandidateResumeSkill struct {
+	Skill           string `json:"skill"`
+	YearsExperience string `json:"years_experience"`
+}
+
+// CandidateResumeResponse estructura para la respuesta completa del resume
+type CandidateResumeResponse struct {
+	PersonalInfo     CandidateResumePersonalInfo        `json:"personal_info"`
+	ResumeProperties CandidateResumePropertiesComplete  `json:"resume_properties"`
+	Skills           []CandidateResumeSkill             `json:"skills"`
+	ResumeText       string                             `json:"resume_text"`
 }

@@ -204,6 +204,10 @@ func setupRoutes(router *gin.Engine) {
 		{
 			intelliscreenGroup.GET("/candidates", getIntelliscreenCandidatesHandler)
 		}
+
+		// Rutas para webhook de n8n
+		api.POST("/webhook/receive", receiveWebhookData)
+		api.GET("/webhook/response/:sessionId", getWebhookResponse)
 	}
 
 	// Ruta para obtener metadatos de pipelines

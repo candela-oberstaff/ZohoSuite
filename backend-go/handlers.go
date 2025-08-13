@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -2503,4 +2504,134 @@ func createOpportunity(c *gin.Context) {
 			Data:    errorResponse, // Incluir la respuesta completa para depuración
 		})
 	}
+}
+
+// Estructura para almacenar respuestas de webhook temporalmente
+type WebhookResponse struct {
+	ID        string                 `json:"id"`
+	Content   string                 `json:"content"`
+	Response  string                 `json:"response"`
+	Timestamp time.Time              `json:"timestamp"`
+	SessionID string                 `json:"sessionId"`
+	UserID    string                 `json:"userId"`
+	Data      map[string]interface{} `json:"data"`
+}
+
+// Mapa para almacenar respuestas temporalmente (en producción usar Redis o base de datos)
+var webhookResponses = make(map[string]*WebhookResponse)
+var responseMutex sync.RWMutex
+
+// receiveWebhookData maneja los datos recibidos del nodo HTTP Request de n8n
+func receiveWebhookData(c *gin.Context) {
+	log.Printf("Recibiendo datos del webhook de n8n")
+
+	// Leer el cuerpo de la solicitud
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		log.Printf("Error al leer el cuerpo de la solicitud: %v", err)
+		c.JSON(400, gin.H{
+			"success": false,
+			"error":   "Error al leer los datos",
+		})
+		return
+	}
+
+	log.Printf("Datos recibidos del webhook: %s", string(body))
+
+	// Parsear los datos JSON
+	var webhookData map[string]interface{}
+	if err := json.Unmarshal(body, &webhookData); err != nil {
+		log.Printf("Error al parsear JSON: %v", err)
+		c.JSON(400, gin.H{
+			"success": false,
+			"error":   "Datos JSON inválidos",
+		})
+		return
+	}
+
+	// Extraer información de la respuesta
+	messageID := ""
+	sessionID := ""
+	userID := ""
+	responseContent := ""
+
+	if id, ok := webhookData["messageId"].(string); ok {
+		messageID = id
+	}
+	if session, ok := webhookData["sessionId"].(string); ok {
+		sessionID = session
+	}
+	if user, ok := webhookData["userId"].(string); ok {
+		userID = user
+	}
+	if response, ok := webhookData["response"].(string); ok {
+		responseContent = response
+	} else if content, ok := webhookData["content"].(string); ok {
+		responseContent = content
+	} else if message, ok := webhookData["message"].(string); ok {
+		responseContent = message
+	}
+
+	// Crear respuesta estructurada
+	webhookResponse := &WebhookResponse{
+		ID:        messageID,
+		Content:   responseContent,
+		Response:  responseContent,
+		Timestamp: time.Now(),
+		SessionID: sessionID,
+		UserID:    userID,
+		Data:      webhookData,
+	}
+
+	// Almacenar la respuesta temporalmente
+	if sessionID != "" {
+		responseMutex.Lock()
+		webhookResponses[sessionID] = webhookResponse
+		responseMutex.Unlock()
+		log.Printf("Respuesta almacenada para sesión: %s", sessionID)
+	}
+
+	log.Printf("Datos procesados exitosamente: %+v", webhookData)
+
+	// Responder con éxito
+	c.JSON(200, gin.H{
+		"success": true,
+		"message": "Datos recibidos y procesados exitosamente",
+		"data":    webhookData,
+		"timestamp": time.Now().Format(time.RFC3339),
+	})
+}
+
+// getWebhookResponse permite al frontend obtener la respuesta del webhook
+func getWebhookResponse(c *gin.Context) {
+	sessionID := c.Param("sessionId")
+	if sessionID == "" {
+		c.JSON(400, gin.H{
+			"success": false,
+			"error":   "Session ID requerido",
+		})
+		return
+	}
+
+	responseMutex.RLock()
+	response, exists := webhookResponses[sessionID]
+	responseMutex.RUnlock()
+
+	if !exists {
+		c.JSON(404, gin.H{
+			"success": false,
+			"error":   "No hay respuesta disponible para esta sesión",
+		})
+		return
+	}
+
+	// Eliminar la respuesta después de entregarla (consumo único)
+	responseMutex.Lock()
+	delete(webhookResponses, sessionID)
+	responseMutex.Unlock()
+
+	c.JSON(200, gin.H{
+		"success": true,
+		"data":    response,
+	})
 }

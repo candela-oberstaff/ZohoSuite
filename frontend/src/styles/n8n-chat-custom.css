@@ -1,0 +1,657 @@
+/* Estilos personalizados para el widget de n8n chat */
+/* Adaptado al tema verde del proyecto Zoho */
+
+/* Contenedor principal del chat */
+.n8n-chat {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Contenedor raíz del chat */
+#n8n-chat {
+  border-radius: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Header del chat - Estilo WhatsApp */
+.n8n-chat .chat-header {
+  background: #075e54 !important;
+  border-bottom: 1px solid #128c7e !important;
+  padding: 16px 20px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+.n8n-chat .chat-header h1,
+.n8n-chat .chat-header .title {
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 18px !important;
+  margin: 0 !important;
+}
+
+.n8n-chat .chat-header .subtitle {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 13px !important;
+  margin-top: 2px !important;
+}
+
+/* Área de mensajes - Estilo WhatsApp */
+.n8n-chat .messages-container {
+  background-color: #e5ddd5 !important;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><defs><pattern id="chat-bg" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23chat-bg)"/></svg>') !important;
+  padding: 16px 8px !important;
+}
+
+/* Contenedor de mensaje individual */
+.n8n-chat .message {
+  margin-bottom: 8px !important;
+  max-width: 80% !important;
+  clear: both !important;
+  position: relative !important;
+  word-wrap: break-word !important;
+}
+
+/* Mensajes del usuario - Estilo WhatsApp */
+.n8n-chat .message.user {
+  background-color: #dcf8c6 !important;
+  color: #303030 !important;
+  border-radius: 18px 18px 4px 18px !important;
+  margin-left: auto !important;
+  margin-right: 8px !important;
+  float: right !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+/* Mensajes del bot - Estilo WhatsApp */
+.n8n-chat .message.bot,
+.n8n-chat .message.assistant {
+  background-color: #ffffff !important;
+  color: #303030 !important;
+  border-radius: 18px 18px 18px 4px !important;
+  margin-left: 8px !important;
+  margin-right: auto !important;
+  float: left !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+}
+
+/* Asegurar alineación a la izquierda para todo el contenido del bot - FORZADO */
+.n8n-chat .message.bot,
+.n8n-chat .message.bot *,
+.n8n-chat .message.bot **,
+.n8n-chat .message.assistant,
+.n8n-chat .message.assistant *,
+.n8n-chat .message.assistant ** {
+  text-align: left !important;
+  color: #303030 !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+/* Contenido de mensajes del bot - FORZADO */
+.n8n-chat .message.bot .message-content,
+.n8n-chat .message.assistant .message-content,
+.n8n-chat .message.bot div,
+.n8n-chat .message.assistant div,
+.n8n-chat .message.bot span,
+.n8n-chat .message.assistant span {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+/* Forzar alineación específica para elementos de texto */
+.n8n-chat .message.bot [class*="text"],
+.n8n-chat .message.bot [class*="content"],
+.n8n-chat .message.bot [class*="message"],
+.n8n-chat .message.assistant [class*="text"],
+.n8n-chat .message.assistant [class*="content"],
+.n8n-chat .message.assistant [class*="message"] {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+/* Párrafos en mensajes */
+.n8n-chat .message p {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* Clearfix para los mensajes flotantes */
+.n8n-chat .messages-container::after {
+  content: "" !important;
+  display: table !important;
+  clear: both !important;
+}
+
+/* Input del chat - Estilo WhatsApp */
+.n8n-chat .chat-input {
+  border: 1px solid #ddd !important;
+  border-radius: 20px !important;
+  padding: 10px 16px !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 14px !important;
+  background-color: #ffffff !important;
+  transition: border-color 0.2s ease !important;
+  resize: none !important;
+  min-height: 20px !important;
+  max-height: 100px !important;
+}
+
+.n8n-chat .chat-input:focus {
+  border-color: #25d366 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.n8n-chat .chat-input::placeholder {
+  color: #999 !important;
+  font-style: normal !important;
+}
+
+/* Botón de envío - Estilo WhatsApp */
+.n8n-chat .send-button {
+  background-color: #25d366 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  width: 42px !important;
+  height: 42px !important;
+  border: none !important;
+  transition: background-color 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: 8px !important;
+}
+
+.n8n-chat .send-button:hover {
+  background-color: #128c7e !important;
+}
+
+.n8n-chat .send-button:disabled {
+  background-color: #bbb !important;
+  cursor: not-allowed !important;
+}
+
+/* Contenedor del input - Estilo WhatsApp */
+.n8n-chat .input-container {
+  background-color: #f0f0f0 !important;
+  border-top: 1px solid #ddd !important;
+  padding: 12px 16px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+}
+
+/* Contenedor del input de texto */
+.n8n-chat .input-wrapper {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  background-color: white !important;
+  border-radius: 20px !important;
+  padding: 2px !important;
+}
+
+/* Indicador de escritura */
+.n8n-chat .typing-indicator {
+  color: #6b7280 !important;
+}
+
+/* Scrollbar personalizada */
+.n8n-chat .messages-container::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.n8n-chat .messages-container::-webkit-scrollbar-track {
+  background: #f3f4f6 !important;
+}
+
+.n8n-chat .messages-container::-webkit-scrollbar-thumb {
+  background: #d1d5db !important;
+  border-radius: 3px !important;
+}
+
+.n8n-chat .messages-container::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af !important;
+}
+
+/* Pantalla de bienvenida */
+.n8n-chat .welcome-screen {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important;
+}
+
+.n8n-chat .welcome-screen .title {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+.n8n-chat .welcome-screen .subtitle {
+  color: #6b7280 !important;
+}
+
+.n8n-chat .welcome-screen .get-started-button {
+  background-color: #22c55e !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 12px 24px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.n8n-chat .welcome-screen .get-started-button:hover {
+  background-color: #16a34a !important;
+}
+
+/* Footer */
+.n8n-chat .chat-footer {
+  color: #9ca3af !important;
+  font-size: 12px !important;
+  text-align: center !important;
+  padding: 8px !important;
+}
+
+/* Animaciones suaves */
+.n8n-chat .message {
+  animation: slideIn 0.3s ease-out !important;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .n8n-chat {
+    border-radius: 0 !important;
+  }
+  
+  .n8n-chat .chat-header {
+    padding: 16px !important;
+  }
+  
+  .n8n-chat .input-container {
+    padding: 12px !important;
+  }
+}
+
+/* Estados de carga */
+.n8n-chat .loading {
+  color: #6b7280 !important;
+}
+
+.n8n-chat .error {
+  color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+}
+
+/* Mejoras de accesibilidad */
+.n8n-chat button:focus {
+  outline: 2px solid #22c55e !important;
+  outline-offset: 2px !important;
+}
+
+.n8n-chat input:focus {
+  outline: none !important;
+}
+
+/* Personalización adicional para elementos específicos del widget */
+.n8n-chat [class*="chat"] {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.n8n-chat [class*="button"] {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 500 !important;
+}
+
+/* Estilos para subida de archivos */
+.n8n-chat .file-upload-area {
+  border: 2px dashed #22c55e !important;
+  border-radius: 8px !important;
+  background-color: #f0fdf4 !important;
+  color: #166534 !important;
+  transition: all 0.2s ease !important;
+}
+
+.n8n-chat .file-upload-area:hover {
+  border-color: #16a34a !important;
+  background-color: #dcfce7 !important;
+}
+
+.n8n-chat .file-upload-button {
+  background-color: #22c55e !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.n8n-chat .file-upload-button:hover {
+  background-color: #16a34a !important;
+}
+
+.n8n-chat .file-preview {
+  background-color: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  margin: 8px 0 !important;
+}
+
+.n8n-chat .file-name {
+  color: #1f2937 !important;
+  font-weight: 500 !important;
+}
+
+.n8n-chat .file-size {
+  color: #6b7280 !important;
+  font-size: 12px !important;
+}
+
+/* Mejorar el indicador de sesión persistente */
+.n8n-chat .session-indicator {
+  background-color: #dcfce7 !important;
+  color: #166534 !important;
+  padding: 4px 8px !important;
+  border-radius: 12px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  margin: 4px 0 !important;
+}
+
+/* Estilos para mensajes con archivos */
+.n8n-chat .message.with-file {
+  border-left: 3px solid #22c55e !important;
+  padding-left: 16px !important;
+}
+
+/* Mejorar la apariencia de los enlaces */
+.n8n-chat a {
+  color: #22c55e !important;
+  text-decoration: underline !important;
+  transition: color 0.2s ease !important;
+}
+
+.n8n-chat a:hover {
+  color: #16a34a !important;
+}
+
+/* Asegurar que el contenedor principal tenga el tamaño correcto */
+#n8n-chat {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+}
+
+/* Mejoras para la experiencia de usuario - Estilo WhatsApp */
+/* Botón sticky de nueva conversación */
+.sticky-new-conversation {
+  position: sticky !important;
+  top: 64px !important;
+  z-index: 50 !important;
+  background-color: #f0f0f0 !important;
+  border-bottom: 1px solid #ddd !important;
+  padding: 12px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Timestamps estilo WhatsApp */
+.n8n-chat .message-timestamp {
+  color: #999 !important;
+  font-size: 11px !important;
+  margin-top: 4px !important;
+  text-align: right !important;
+  display: block !important;
+}
+
+.n8n-chat .message.user .message-timestamp {
+  color: #4a4a4a !important;
+}
+
+/* Indicador de estado de mensaje */
+.n8n-chat .message.user::after {
+  content: "✓✓" !important;
+  color: #4fc3f7 !important;
+  font-size: 10px !important;
+  position: absolute !important;
+  bottom: 4px !important;
+  right: 8px !important;
+}
+
+/* Asegurar que los párrafos en mensajes estén bien formateados */
+.n8n-chat .message.bot p,
+.n8n-chat .message.assistant p {
+  text-align: left !important;
+  margin: 0 0 4px 0 !important;
+  line-height: 1.4 !important;
+}
+
+.n8n-chat .message.user p {
+  margin: 0 0 4px 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* Asegurar que las listas en mensajes estén alineadas correctamente */
+.n8n-chat .message.bot ul,
+.n8n-chat .message.bot ol,
+.n8n-chat .message.assistant ul,
+.n8n-chat .message.assistant ol {
+  text-align: left !important;
+  padding-left: 16px !important;
+  margin: 4px 0 !important;
+}
+
+.n8n-chat .message.bot li,
+.n8n-chat .message.assistant li {
+  text-align: left !important;
+  margin-bottom: 2px !important;
+}
+
+/* Mejorar el espaciado de código en mensajes */
+.n8n-chat .message code {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  color: #333 !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 13px !important;
+}
+
+.n8n-chat .message pre {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px !important;
+  overflow-x: auto !important;
+  margin: 4px 0 !important;
+}
+
+/* Indicador de escritura estilo WhatsApp */
+.n8n-chat .typing-indicator {
+  color: #999 !important;
+  font-style: italic !important;
+  padding: 8px 12px !important;
+  background-color: #ffffff !important;
+  border-radius: 18px 18px 18px 4px !important;
+  margin-left: 8px !important;
+  margin-right: auto !important;
+  float: left !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+  max-width: 80% !important;
+  margin-bottom: 8px !important;
+}
+
+/* Ocultar elementos innecesarios en modo fullscreen */
+.n8n-chat.fullscreen .chat-toggle {
+  display: none !important;
+}
+
+/* Mejorar la apariencia del timestamp */
+.n8n-chat .message-timestamp {
+  color: #9ca3af !important;
+  font-size: 11px !important;
+  margin-top: 4px !important;
+}
+
+/* Estilos para código en mensajes */
+.n8n-chat code {
+  background-color: #f3f4f6 !important;
+  color: #1f2937 !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  font-family: 'Courier New', monospace !important;
+}
+
+.n8n-chat pre {
+  background-color: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  overflow-x: auto !important;
+  margin: 8px 0 !important;
+}
+
+.n8n-chat pre code {
+  background: none !important;
+  padding: 0 !important;
+}
+
+/* SOBRESCRIBIR ESTILOS DEL WIDGET N8N - MÁXIMA PRIORIDAD */
+.n8n-chat .message.bot,
+.n8n-chat .message.assistant {
+  text-align: left !important;
+}
+
+/* Sobrescribir cualquier estilo de centrado del widget */
+.n8n-chat [style*="text-align: center"],
+.n8n-chat [style*="text-align:center"] {
+  text-align: left !important;
+}
+
+/* Forzar alineación en todos los elementos posibles */
+.n8n-chat .message.bot > *,
+.n8n-chat .message.assistant > * {
+  text-align: left !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Estilos específicos para el contenido del mensaje */
+.n8n-chat .message.bot .message-text,
+.n8n-chat .message.bot .text,
+.n8n-chat .message.bot .content,
+.n8n-chat .message.assistant .message-text,
+.n8n-chat .message.assistant .text,
+.n8n-chat .message.assistant .content {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  display: block !important;
+}
+
+/* Sobrescribir flexbox que pueda estar centrando */
+.n8n-chat .message.bot,
+.n8n-chat .message.assistant {
+  display: block !important;
+  text-align: left !important;
+}
+
+.n8n-chat .message.bot *,
+.n8n-chat .message.assistant * {
+  text-align: left !important;
+}
+
+/* FORZAR ALINEACIÓN CON MÁXIMA ESPECIFICIDAD */
+.n8n-chat .message.bot[style],
+.n8n-chat .message.assistant[style] {
+  text-align: left !important;
+}
+
+/* Sobrescribir estilos inline específicos */
+.n8n-chat .message.bot[style*="text-align"],
+.n8n-chat .message.assistant[style*="text-align"] {
+  text-align: left !important;
+}
+
+/* Forzar en elementos con clases específicas del widget */
+.n8n-chat .message.bot div[class],
+.n8n-chat .message.bot span[class],
+.n8n-chat .message.bot p[class],
+.n8n-chat .message.assistant div[class],
+.n8n-chat .message.assistant span[class],
+.n8n-chat .message.assistant p[class] {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+/* Sobrescribir cualquier flexbox o grid que centre contenido */
+.n8n-chat .message.bot,
+.n8n-chat .message.assistant {
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  text-align: left !important;
+}
+
+/* Forzar en todos los elementos hijos directos e indirectos */
+.n8n-chat .message.bot > *,
+.n8n-chat .message.bot > * > *,
+.n8n-chat .message.bot > * > * > *,
+.n8n-chat .message.assistant > *,
+.n8n-chat .message.assistant > * > *,
+.n8n-chat .message.assistant > * > * > * {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+/* Sobrescribir estilos de centrado comunes */
+.n8n-chat .message.bot [style*="center"],
+.n8n-chat .message.assistant [style*="center"] {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+/* Forzar en elementos con ID específicos */
+.n8n-chat .message.bot [id],
+.n8n-chat .message.assistant [id] {
+  text-align: left !important;
+}
+
+/* Usar especificidad máxima con selectores múltiples */
+.n8n-chat.n8n-chat .message.bot.message,
+.n8n-chat.n8n-chat .message.assistant.message {
+  text-align: left !important;
+}
+
+.n8n-chat.n8n-chat .message.bot.message *,
+.n8n-chat.n8n-chat .message.assistant.message * {
+  text-align: left !important;
+}
